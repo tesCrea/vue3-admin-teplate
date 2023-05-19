@@ -2,28 +2,39 @@
  * @Author: 123 123.com
  * @Date: 2023-05-18 09:46:19
  * @LastEditors: 123 123.com
- * @LastEditTime: 2023-05-19 13:59:56
+ * @LastEditTime: 2023-05-19 18:18:33
  * @FilePath: \vue-demo\vue-project\src\views\login\index.vue
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
 -->
 <template>
   <div class="login-container">
     <div class="login-form">
-      <el-form :model="form" label-width="120px" :rules="loginRules">
-        
-        <el-form-item label="">
+      <el-form 
+      :model="form" 
+      label-width="120px" 
+      :rules="loginRules" 
+      ref="refLoginForm">
+        <el-form-item prop="form.loginForm.username" >
           <span class="svg-container-user">
           <svg-icon name="user" />
         </span>
-          <el-input v-model="form.name" placeholder="输入用户名" type="text" />
+          <el-input 
+          v-model="form.name" 
+          ref="refUserName"
+          placeholder="输入用户名" type="text" />
         </el-form-item>
-        <el-form-item label="">
+        <el-form-item prop="form.loginForm.password">
           <span class="svg-container-pwd">
           <svg-icon name="password" />
           </span>
-          <el-input v-model="form.password" placeholder="请输入密码" type="password" />
+          <el-input 
+          v-model="form.loginForm.password" 
+          placeholder="请输入密码" 
+          :type="passwordType" 
+          ref="refPassword"
+          />
           <span class="show-pwd" @click="showPwd()">
-            <svg-icon :name="passwordType === 'password' ? 'eye' : 'eye-open'" />
+            <svg-icon :name="passwordType === 'password' ? 'eye' : 'eye-open'"  />
           </span>
         </el-form-item>
         <el-form-item>
@@ -85,7 +96,7 @@ const router = useRouter()
 const route = useRoute()
 // login
 const onSubmit = () => {
-  form.loginForm.validate(async(valid)=>{
+  form.refLoginForm.validate(async(valid)=>{
     if(valid){
       const userData = useStore()
       await userData.login(form.loginForm)
@@ -100,10 +111,12 @@ const onSubmit = () => {
 const showPwd = () => {
   if (form.passwordType === 'password') {
     form.passwordType = ''
+  }else{
+    form.passwordType = 'password'
   }
-  form.passwordType = 'password'
+
   nextTick(() => {
-    form.LoginForm.password.focus()
+    form.refPassword.focus()
   })
 }
 </script>
